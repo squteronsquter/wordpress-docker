@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  # Database, is absolutely required. If this process is not running you will see database connection error.
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - example
+  # phpmyadmin, just in case you need a webbased interface to your database. It's not required.
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - example
+  # Wordpress image from Docker Hub
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    ports:
+      - '8000:80'
+    restart: always
+    # synchronized folder is where you run the .yaml file i.e (pwd) - that's why the dot './'
+    volumes: ['./:/var/www/html']
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    # run http://example.test:8000 -- if example is the name of the folder in which you run your docker commands from this file
+    networks:
+      - example
+networks:
+  example:
+volumes:
+  db_data:
