@@ -15,7 +15,7 @@
 
 ## Some useful Docker commands which you may need to know
 
-### Stop all containers if they are running
+### Stop/remove/clean all containers, images and shared volumes if you do not need them anymore
 
 Check running containers first
 
@@ -44,3 +44,5 @@ docker volume ls
 docker volume rm <id> -f
 
 ```
+
+**_Happy dockerizing_**
